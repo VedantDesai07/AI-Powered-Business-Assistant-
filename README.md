@@ -58,4 +58,4 @@ pytest tests/ -v
 
 ## Tech
 
-Python · Claude API · SQLite · Pytest · GitHub Actions
+Python · Claude API · SQLite · Pytest 
