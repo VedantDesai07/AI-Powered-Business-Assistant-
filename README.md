@@ -13,8 +13,6 @@ ai_assistant/
 ├── assistant.py        # Everything: tools, agent loop, SQLite, CLI
 ├── tests/
 │   └── test_assistant.py   # 21 unit tests
-├── .github/workflows/
-│   └── ci.yml          # Runs tests on push via GitHub Actions
 ├── requirements.txt
 └── .gitignore
 ```
