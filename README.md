@@ -1,59 +1,73 @@
-# AI-Powered Business Automation Assistant
+# AI-Powered Business Assistant
 
 A CLI assistant that uses the Claude API with tool-chaining to answer business questions about sales, expenses, and inventory. Conversation history is saved to SQLite so sessions persist between runs.
 
 ## How it works
 
-When you ask a question, the assistant figures out which tool(s) to call (e.g. `lookup_sales` → `query_expenses`), calls them in sequence, and uses the returned data to give you a numbers-backed answer. This is called tool-chaining — Claude decides the order automatically.
+You ask a question through the command line. The assistant runs an agentic loop — it calls whichever tool(s) are needed (up to 5 rounds), collects the results, and returns a numbers-backed answer. Claude decides which tools to call and in what order.
 
 ## Project structure
 
 ```
-ai_assistant/
-├── assistant.py        # Everything: tools, agent loop, SQLite
-├── tests/
-│   └── test_assistant.py   # 21 unit tests
+├── assistant.py        # All logic: tools, mock data, agentic loop, SQLite, CLI
+├── test_assistant.py   # 17-test Pytest suite
 ├── requirements.txt
-└── .gitignore
+└── README.md
 ```
 
 ## Setup
 
+Install dependencies:
+
 ```bash
-git clone https://github.com/vedantdesai07/ai-business-assistant
-cd ai_assistant
-
 pip install -r requirements.txt
+```
 
-# Add your API key
+Set your Anthropic API key:
+
+```bash
 export ANTHROPIC_API_KEY=your_key_here
+```
 
+Run the assistant:
+
+```bash
 python assistant.py
 ```
 
-## Run tests
+Run tests:
 
 ```bash
-pytest tests/ -v
+pytest test_assistant.py -v
 ```
-
-## Example questions to try
-
-- "What were total sales in March 2026?"
-- "Which inventory items are running low?"
-- "Are we profitable this month?"
-- "Generate a full report for March 2026"
-- "Compare our revenue and expenses"
 
 ## Tools
 
 | Tool | What it does |
-|------|-------------|
-| `lookup_sales` | Returns sales by product, filterable by month |
-| `query_expenses` | Returns expenses by category |
-| `check_inventory` | Returns inventory levels, can filter to low-stock only |
-| `generate_report` | Combines all three into a summary |
+|---|---|
+| `lookup_sales` | Returns sales data, filterable by month (YYYY-MM) |
+| `query_expenses` | Returns expense data by category, filterable by month |
+| `check_inventory` | Returns inventory levels; supports low-stock-only filter |
+| `generate_report` | Combines sales, expenses, and low-stock inventory into a summary |
+
+## Mock data
+
+The assistant uses hardcoded mock data defined directly in `assistant.py` — three Python lists (`SALES_DATA`, `EXPENSE_DATA`, `INVENTORY_DATA`) covering March 2026 figures. There is no external database or file.
+
+## Session persistence
+
+Each run starts a new session (keyed by timestamp). All messages are saved to a local `sessions.db` SQLite file so conversation history is preserved across turns within a session.
+
+## Test coverage
+
+The 17-test suite in `test_assistant.py` covers:
+
+- Tool function correctness (sales totals, expense filtering, inventory thresholds, report generation)
+- SQLite session logic (init, save, load, session isolation, empty sessions)
+- Agentic loop behaviour (plain responses, tool-chaining, max-round cutoff)
+
+All API calls are mocked using `unittest.mock` — no live API calls required to run the tests.
 
 ## Tech
 
-Python · Claude API · SQLite · Pytest 
+Python · Anthropic Claude API (`claude-haiku-4-5-20251001`) · SQLite · Pytest
