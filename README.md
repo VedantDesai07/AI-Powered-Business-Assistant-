@@ -10,7 +10,7 @@ When you ask a question, the assistant figures out which tool(s) to call (e.g. `
 
 ```
 ai_assistant/
-├── assistant.py        # Everything: tools, agent loop, SQLite, CLI
+├── assistant.py        # Everything: tools, agent loop, SQLite
 ├── tests/
 │   └── test_assistant.py   # 21 unit tests
 ├── requirements.txt
